@@ -45,28 +45,31 @@ task :folders do
   end
 end
 
+IS_WINDOWS = true
+REDIRECT_IO_ERR = IS_WINDOWS ? '>NUL 2>&1' : '&> /dev/null'
+REDIRECT_IO = IS_WINDOWS ? '>NUL' : '> /dev/null'
+
 task :update do
   puts "Cleaning the janus folder"
-  #`git clean -xdf -- janus &> /dev/null`
-  `git clean -xdf -- janus >NUL 2>&1`
+  `git clean -xdf -- janus #{REDIRECT_IO_ERR}`
   `git ls-files --exclude-standard --others -- janus`.split("\n").each do |untracked|
     FileUtils.rm_rf File.expand_path(untracked.chomp, File.dirname(__FILE__))
   end
 
   puts "Pulling latest changes"
-  `git pull > /dev/null`
+  #`git pull #{REDIRECT_IO}`
 
   puts "Cleaning the janus folder"
-  `git clean -xdf -- janus &> /dev/null`
+  `git clean -xdf -- janus #{REDIRECT_IO_ERR}`
   `git ls-files --exclude-standard --others -- janus`.split("\n").each do |untracked|
     FileUtils.rm_rf File.expand_path(untracked.chomp, File.dirname(__FILE__))
   end
 
   puts "Synchronising submodules urls"
-  `git submodule sync > /dev/null`
+  `git submodule sync #{REDIRECT_IO}`
 
   puts "Updating the submodules"
-  `git submodule update --init > /dev/null`
+  `git submodule update --init #{REDIRECT_IO}`
 end
 
 task :install => [:folders, :link_vim_conf_files] do
