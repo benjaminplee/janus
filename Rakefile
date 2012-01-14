@@ -47,7 +47,8 @@ end
 
 task :update do
   puts "Cleaning the janus folder"
-  `git clean -xdf -- janus &> /dev/null`
+  #`git clean -xdf -- janus &> /dev/null`
+  `git clean -xdf -- janus >NUL 2>&1`
   `git ls-files --exclude-standard --others -- janus`.split("\n").each do |untracked|
     FileUtils.rm_rf File.expand_path(untracked.chomp, File.dirname(__FILE__))
   end
