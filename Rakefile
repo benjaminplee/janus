@@ -45,7 +45,7 @@ task :folders do
   end
 end
 
-IS_WINDOWS = true
+IS_WINDOWS = RbConfig::CONFIG['host_os'] =~ /mingw/
 REDIRECT_IO_ERR = IS_WINDOWS ? '>NUL 2>&1' : '&> /dev/null'
 REDIRECT_IO = IS_WINDOWS ? '>NUL' : '> /dev/null'
 
